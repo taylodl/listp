@@ -61,6 +61,10 @@ VALUE_PTR CDR(VALUE_PTR cons) {
 }
 
 
+/*
+  Private utility function for PRINT_CONS.
+  Used to print the CAR and CDR
+*/
 void _PRINT(VALUE_PTR item) {
   assert(item != NULL);
 
@@ -96,7 +100,12 @@ void _PRINT(VALUE_PTR item) {
 }
 
 
+/*
+  Print CONS. Output differs depending on whether the CONS is a list
+*/
 void PRINT_CONS(VALUE_PTR cons) {
+  assert(cons != NULL);
+
   if (CONS_IS_LIST(cons)) {
     printf("(");
     if (IS_VALUE_CONS(CAR(cons))) {
@@ -118,37 +127,15 @@ void PRINT_CONS(VALUE_PTR cons) {
 }
 
 
+/*
+  Release memory held by this CONS by freeing both the CAR and CDR
+*/
 void FREE_CONS(CONS_PTR cons) {
-  if (cons->car != NULL) {
-    FREE_VALUE(cons->car);
-  }
+  assert(cons->car != NULL);
+  assert(cons->cdr != NULL);
 
-  if (cons->cdr != NULL) {
-    FREE_VALUE(cons->cdr);
-  }
+  FREE_VALUE(cons->car);
+  FREE_VALUE(cons->cdr);
 }
 
 
-/* int main(int argc, STRING argv[]) { */
-/*   CONS_CELL_PTR cons = CONS(MAKE_SYMBOL("first"), NULL); */
-/*   PRINT(cons);			// (first) */
-
-/*   LIST list = CONS(MAKE_SYMBOL("1"), CONS(MAKE_SYMBOL("2"), CONS(MAKE_SYMBOL("3"), NULL))); */
-/*   PRINT(list);			// (1 2 3) */
-
-/*   PRINT(CDR(list));		// (2 3) */
-/*   PRINT(CDR(CDR(list)));	// (3) */
-/*   PRINT(CDR(CDR(CDR(list))));	// NIL */
-
-/*   PRINT(CAR(list));		// 1 */
-/*   PRINT(CAR(CDR(list)));	// 2 */
-/*   PRINT(CAR(CDR(CDR(list))));	// 3 */
-
-/*   PRINT(CONS(NULL, NULL));	// (NIL) */
-
-/*   PRINT(CONS(CONS(MAKE_SYMBOL("1"), NULL), NULL));	// ((1)) */
-/*   PRINT(CONS(CONS(CONS(MAKE_SYMBOL("1"), NULL), NULL), NULL));	// (((1))) */
-
-/*   LIST list2 = CONS(MAKE_SYMBOL("1"), CONS(CONS(MAKE_SYMBOL("2"), CONS(CONS(MAKE_SYMBOL("3"), NULL), NULL)), NULL)); */
-/*   PRINT(list2);			// (1 (2 (3))) */
-/* } */
