@@ -96,14 +96,16 @@ VALUE_PTR MAKE_SYMBOL_VALUE(void* value) {
   Free VALUE, reclaiming memory
 */
 void FREE_VALUE(VALUE_PTR v) {
-  if (IS_VALUE_STRING(v)) {
-    free(v->value.string);
-  } else if (IS_VALUE_CONS(v)) {
-    FREE_CONS(v->value.cons);
-  } else if (IS_VALUE_SYMBOL(v)) {
-    FREE_SYMBOL(v->value.symbol);
+  if (v != NULL) {
+    if (IS_VALUE_STRING(v)) {
+      free(v->value.string);
+    } else if (IS_VALUE_CONS(v)) {
+      FREE_CONS(v->value.cons);
+    } else if (IS_VALUE_SYMBOL(v)) {
+      FREE_SYMBOL(v->value.symbol);
+    }
+    free(v);
   }
-  free(v);
 }
 
 
@@ -331,4 +333,21 @@ int main(int argc, STRING argv[]) {
   PRINT_VALUE(CAR(CDR(CAR(CDR(embeddedList)))));
   printf("\n");
   
+  // Our lists aren't immutable though
+  VALUE_PTR a_symbol = MAKE_SYMBOL("a");
+  SETQ(a_symbol, MAKE_STRING_VALUE("A symbol"));
+
+  VALUE_PTR b_symbol = MAKE_SYMBOL("b");
+  SETQ(b_symbol, MAKE_STRING_VALUE("B symbol"));
+
+  VALUE_PTR c_symbol = MAKE_SYMBOL("c");
+  SETQ(c_symbol, MAKE_STRING_VALUE("C symbol"));
+
+  VALUE_PTR simpleList = CONS(a_symbol, CONS(b_symbol, CONS(c_symbol, MAKE_NIL_VALUE())));
+  VALUE_PTR subList = CDR(simpleList);
+  PRINT_VALUE(subList);
+  printf("\n");
+  SETQ(CAR(subList), MAKE_STRING_VALUE("new B symbol value"));
+  PRINT_VALUE(SYMBOL_VALUE(CAR(CDR(simpleList))));
+  printf("\n");
 }

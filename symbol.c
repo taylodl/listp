@@ -88,8 +88,8 @@ void FREE_SYMBOL(SYMBOL_PTR symbol) {
 */
 VALUE_PTR SETQ(VALUE_PTR symbol, VALUE_PTR symbolValue) {
   if (symbol != NULL && IS_VALUE_SYMBOL(symbol)) {
-    FREE_VALUE(symbol->value.symbol);
-    ((SYMBOL_PTR)symbol->value.symbol)->symbolValue = symbolValue;
+    FREE_VALUE(((SYMBOL_PTR)(symbol->value.symbol))->symbolValue);
+    ((SYMBOL_PTR)(symbol->value.symbol))->symbolValue = symbolValue;
     return symbol;
   } else {
     return MAKE_NIL_VALUE();
