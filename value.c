@@ -319,7 +319,16 @@ int main(int argc, STRING argv[]) {
   printf("\n");
 
   // (1 (2 (3)))
-  PRINT_VALUE(CONS(MAKE_SYMBOL("1"), CONS(CONS(MAKE_SYMBOL("2"), CONS(CONS(MAKE_SYMBOL("3"), MAKE_NIL_VALUE()), MAKE_NIL_VALUE())), MAKE_NIL_VALUE())));
+  VALUE_PTR embeddedList = CONS(MAKE_SYMBOL("1"), CONS(CONS(MAKE_SYMBOL("2"), CONS(CONS(MAKE_SYMBOL("3"), MAKE_NIL_VALUE()), MAKE_NIL_VALUE())), MAKE_NIL_VALUE()));
+  PRINT_VALUE(embeddedList);
+  printf("\n");
+
+  // (2 (3))
+  PRINT_VALUE(CAR(CDR(embeddedList)));
+  printf("\n");
+  
+  // (3)
+  PRINT_VALUE(CAR(CDR(CAR(CDR(embeddedList)))));
   printf("\n");
   
 }
